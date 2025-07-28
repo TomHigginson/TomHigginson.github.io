@@ -5,8 +5,149 @@
 }
 
 p {
-    color: blue;
+    color: rgb(98, 103, 255);
     text-align: center;
     font-family: Arial, sans-serif;
     font-size: 20pt;
+}
+
+a {
+    color: #1e90ff;
+}
+
+a:hover {
+    color: #ff6600
+}
+
+body {
+  background-color: rgb(8, 2, 35);
+  background-image: url('fallback.jpg'); /* your default */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: white;
+}
+header {
+    background-color: #7e7e7e;
+    color: #ffffff;
+    padding: 20px;
+    text-align: center;
+}
+nav {
+    background-color: #450202;
+    padding: 10px;
+    text-align: center;
+}
+nav a {
+    color: #ffffff;
+    text-decoration: none;
+    padding: 10px;
+}
+nav a:hover {
+    background-color: #581270;
+}
+main {
+    display: flex; /* Use flexbox */
+    flex-wrap: wrap; /* Allow wrapping */
+    justify-content: space-around; /* Center content */
+    padding: 20px;
+}
+section {
+    padding: 20px;
+    margin-bottom: 20px; /* Add margin between sections */
+    border-radius: 10px;
+    background-color: #2c2b2b;
+    width: calc(50% - 40px); /* Set the width to half the container minus the margins */
+}
+img {
+    max-width: 100%; /* Ensure images don't overflow their containers */
+    border-radius: 10px;
+    margin-bottom: 20px; /* Add margin between images */
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+.grid-container {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  gap: 2rem;
+}
+
+.grid-container > div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  box-sizing: border-box;
+  min-width: 300px;
+}
+
+.row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 1000px;
+  margin: 2rem auto;
+  gap: 2rem;
+}
+
+.row.reverse {
+  flex-direction: row-reverse;
+}
+
+.row img {
+  width: 250px;
+  height: auto;
+  border-radius: 10px;
+}
+
+.row section {
+  flex: 1;
+}
+
+.row section h2 {
+  margin-top: 0;
+}
+
+@media (max-width: 700px) {
+  .row, .row.reverse {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .row section {
+    width: 100%;
+  }
+}
+
+.text {
+  padding: 1rem;
+}
+
+.container {
+  display: flex;
+  align-items: stretch;  /* makes children (image & section) same height */
+  max-width: 900px;      /* max width of entire row */
+  margin: 2rem auto;
+  gap: 1.5rem;
+}
+
+.container img {
+  height: 100%;          /* match container height */
+  width: auto;           /* keep aspect ratio */
+  border-radius: 8px;
+  flex-shrink: 0;        /* prevent image from shrinking smaller */
+}
+
+.container section {
+  flex: 1;               /* take remaining space */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;  /* vertically center text if shorter */
 }
