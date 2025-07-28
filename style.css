@@ -21,7 +21,7 @@ a:hover {
 
 body {
   background-color: rgb(8, 2, 35);
-  background-image: url('fallback.jpg'); /* your default */
+  background-image: url('fallback.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -47,22 +47,22 @@ nav a:hover {
     background-color: #581270;
 }
 main {
-    display: flex; /* Use flexbox */
-    flex-wrap: wrap; /* Allow wrapping */
-    justify-content: space-around; /* Center content */
+    display: flex; 
+    flex-wrap: wrap; 
+    justify-content: space-around; 
     padding: 20px;
 }
 section {
     padding: 20px;
-    margin-bottom: 20px; /* Add margin between sections */
+    margin-bottom: 20px; 
     border-radius: 10px;
     background-color: #2c2b2b;
-    width: calc(50% - 40px); /* Set the width to half the container minus the margins */
+    width: calc(50% - 40px); 
 }
 img {
-    max-width: 100%; /* Ensure images don't overflow their containers */
+    max-width: 100%; 
     border-radius: 10px;
-    margin-bottom: 20px; /* Add margin between images */
+    margin-bottom: 20px; 
 }
 
 body {
@@ -132,22 +132,22 @@ body {
 
 .container {
   display: flex;
-  align-items: stretch;  /* makes children (image & section) same height */
-  max-width: 900px;      /* max width of entire row */
+  align-items: stretch;  
+  max-width: 900px;      
   margin: 2rem auto;
   gap: 1.5rem;
 }
 
 .container img {
-  height: 100%;          /* match container height */
-  width: auto;           /* keep aspect ratio */
+  height: 100%;          
+  width: auto;           
   border-radius: 8px;
-  flex-shrink: 0;        /* prevent image from shrinking smaller */
+  flex-shrink: 0;        
 }
 
 .container section {
-  flex: 1;               /* take remaining space */
+  flex: 1;               
   display: flex;
   flex-direction: column;
-  justify-content: center;  /* vertically center text if shorter */
+  justify-content: center;  
 }
