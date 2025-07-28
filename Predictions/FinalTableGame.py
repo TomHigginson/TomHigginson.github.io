@@ -29,7 +29,7 @@ def scrape_table(league):
     for i, row in enumerate(rows, start=1):
         cols = row.find_all("td")
         if len(cols) < 10:
-            # Might be a summary row or something else; skip
+            # not table; skip
             continue
         raw_team = cols[0].get_text(strip=True)
         team = re.sub(r'^\d+', '', raw_team).strip()
@@ -79,7 +79,7 @@ def score_prediction(pred_row, real_df, league):
     }
 
 def generate_html(real_tables, user_results):
-    # Build HTML as a string
+    # Build HTML as a string - change this so it creates a readable HTML.
     html = """
     <html><head><title>Predictor League Final Results</title>
     <style>
