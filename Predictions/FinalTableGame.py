@@ -14,12 +14,19 @@ BBC_URLS = {
 }
 
 def get_zone(pos, league):
+    """
+    Sets up the zone reegions for the scoring - to edit please look at 
+    the first lines of the code.
+    """
     for i, (start, end) in enumerate(ZONES[league]):
         if start <= pos <= end:
             return i
     return -1
 
 def scrape_table(league):
+    """
+    Takes the live tables from the BBC - the code will fail here if the URL changes.
+    """
     url = BBC_URLS[league]
     r = requests.get(url)
     soup = BeautifulSoup(r.text, "html.parser")
@@ -46,6 +53,10 @@ def scrape_table(league):
 
 
 def score_prediction(pred_row, real_df, league):
+    """
+    Comparison between prediction and real table, this should be correct as it stands,
+    but if not there will be a systematic error in the calculation.
+    """
     team = pred_row["Team"]
     pred_pos = int(pred_row["Position"])
 
@@ -56,13 +67,13 @@ def score_prediction(pred_row, real_df, league):
     position_to_points = dict(zip(real_df['Position'], real_df['Points']))
     real_pos = int(real_row["Position"].iloc[0])
     real_pts = int(real_row["Points"].iloc[0])
-    actual_points = int(real_row['Points'])
+    # actual_points = int(real_row['Points'])
     target_points = position_to_points.get(pred_pos, None)
 
     score = 0
     if real_pos == pred_pos:
         score += 9
-    elif abs(actual_points - target_points) <=3:
+    elif abs(real_pts - target_points) <=3:
         score += 2
     if abs(real_pos - pred_pos) == 1:
         score += 1
@@ -74,46 +85,85 @@ def score_prediction(pred_row, real_df, league):
         "Team": team,
         "Predicted": pred_pos,
         "Real": real_pos,
-        "Points": real_pts,
+        "Points_Diff": abs(real_pts - target_points),
         "Score": score,
     }
 
-def generate_html(real_tables, user_results):
+def generate_html(real_tables, user_results, user_totals):
+    """
+    Where the main section happens, This generates the HTML and will only work
+    if all of the functions before this have run successfully.
+    ONLY Edit the HTML here to ensure the next version has the same changes.
+    DO NOT edit the final_results.html file - IT WILL NOT BE THERE NEXT TIME!!! 
+    """
     # Build HTML as a string - change this so it creates a readable HTML.
     html = """
     <html><head><title>Predictor League Final Results</title>
     <style>
-      body { font-family: Arial, sans-serif; margin: 20px; }
-      table { border-collapse: collapse; width: 100%; margin-bottom: 2em; }
-      th, td { border: 1px solid #ccc; padding: 5px 10px; }
-      th { background: #eee; }
-      .score { text-align: center; font-weight: bold; }
-      h2 { margin-top: 40px; }
+    body { 
+      font-family: Arial, sans-serif; 
+      background: #460001;
+      padding: 20px;
+      color: white;
+      }
+      table { 
+      border-collapse: collapse;
+      width: 100%; 
+      background: rgb(8, 2, 35);
+      margin-bottom: 2em; 
+      }
+      th, td { 
+      border: 1px solid #ccc; 
+      padding: 5px 10px; 
+      }
+      th { 
+      background-color: #034f27; 
+      }
+      .score { 
+      text-align: center; 
+      font-weight: bold; 
+      }
+      h2 { 
+      margin-top: 40px; 
+      }
     </style>
     </head><body>
     <h1>Predictor League - Final Results</h1>
     Tables are pulled directly from the bbc sports website
     """
 
+    html += "<h2>Leaderboard</h2><table><thead><tr><th>Player</th><th>Premier League</th><th>Championship</th><th>Total</th></tr></thead><tbody>"
+    leaderboard = sorted(user_totals.items(), key=lambda x: x[1]['Total'], reverse=True)
+    for name, scores in leaderboard:
+        html += f"<tr><td>{name}</td><td>{scores['Premier League']}</td><td>{scores['Championship']}</td><td><strong>{scores['Total']}</strong></td></tr>"
+    html += "</tbody></table>\n"
+
     for league, df in real_tables.items():
-        html += f"<h2>{league} - Actual Table</h2>"
-        html += "<table><thead><tr>""<th>Position</th>""<th>Team</th>""<th>Points</th>""</tr></thead><tbody>" 
+        html += f"<h2>{league} - Actual Table</h2>\n"
+        html += "<table><thead><tr><th>Position</th><th>Team</th><th>Points</th></tr></thead><tbody>\n"
         for _, row in df.iterrows():
-            html += f"<tr><td>{row['Position']}</td><td>{row['Team']}</td><td>{row['Points']}</td></tr>"
-        html += "</tbody></table>"
+            html += f"<tr><td>{row['Position']}</td><td>{row['Team']}</td><td>{row['Points']}</td></tr>\n"
+        html += "</tbody></table>\n"
 
     for player, leagues in user_results.items():
-        html += f"<h2>Predictions & Scores for {player}</h2>"
+        total_score = user_totals[player]['Total']
+        html += f"<h2>Predictions & Scores for {player} (Total: {total_score})</h2>\n"
         for league, scores in leagues.items():
-            html += f"<h3>{league}</h3>"
-            html += "<table><thead><tr><th>Predicted</th><th>Team</th><th>Actual</th><th>Points</th><th>Score</th></tr></thead><tbody>"
+            running_total = 0
+            league_score = user_totals[player][league]
+            html += f"<h3>{league} (Score: {league_score})</h3>\n"
+            html += "<table><thead><tr><th>Predicted</th><th>Team</th><th>Actual</th><th>Points Difference</th><th>Score</th><th>Running Total</th></tr></thead><tbody>\n"
             for s in scores:
-                html += f"<tr><td>{s['Predicted']}</td><td>{s['Team']}</td><td>{s['Real']}</td><td>{s['Points']}</td><td class='score'>{s['Score']}</td></tr>"
-            html += "</tbody></table>"
+                running_total += s['Score']
+                html += f"<tr><td>{s['Predicted']}</td><td>{s['Team']}</td><td>{s['Real']}</td><td>{s['Points_Diff']}</td><td class='score'>{s['Score']}</td><td>{running_total}</td></tr>\n"
+            html += "</tbody></table>\n"
     html += "</body></html>"
     return html
 
-def main():
+def main(): 
+    """
+    Does the stuff, runs everything but issues will likely be in other definitions.
+    """
     # Read predictions CSV - must have columns: Name, League, Position, Team
     predictions = pd.read_csv("Predictions/predictions.csv")
 
@@ -122,8 +172,11 @@ def main():
         real_tables[league] = scrape_table(league)
 
     user_results = {}
+    user_totals = {}
+
     for name in predictions["Name"].unique():
         user_results[name] = {}
+        user_totals[name] = {"Premier League": 0, "Championship": 0, "Total": 0}
         user_preds = predictions[predictions["Name"] == name]
         for league in user_preds["League"].unique():
             league_preds = user_preds[user_preds["League"] == league]
@@ -132,13 +185,16 @@ def main():
                 score = score_prediction(row, real_tables[league], league)
                 if score:
                     scored_list.append(score)
+                    user_totals[name][league] += score["Score"]
+                    user_totals[name]["Total"] += score["Score"]
             user_results[name][league] = scored_list
 
-    html_content = generate_html(real_tables, user_results)
+    html_content = generate_html(real_tables, user_results, user_totals)
 
     with open("final_results.html", "w", encoding="utf-8") as f:
         f.write(html_content)
     print("final_results.html generated!")
+
 
 if __name__ == "__main__":
     main()
