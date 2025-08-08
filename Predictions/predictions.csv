@@ -19,6 +19,30 @@ Lewis,Premier League,17,Leeds United
 Lewis,Premier League,18,Burnley
 Lewis,Premier League,19,Brentford
 Lewis,Premier League,20,Sunderland
+Lewis,Championship,1,Leicester City
+Lewis,Championship,2,Sheffield United
+Lewis,Championship,3,Birmingham City
+Lewis,Championship,4,Southampton
+Lewis,Championship,5,Norwich City
+Lewis,Championship,6,Coventry City
+Lewis,Championship,7,Swansea City
+Lewis,Championship,8,Middlesbrough
+Lewis,Championship,9,Wrexham
+Lewis,Championship,10,West Bromwich Albion
+Lewis,Championship,11,Millwall
+Lewis,Championship,12,Ipswich Town
+Lewis,Championship,13,Watford
+Lewis,Championship,14,Bristol City
+Lewis,Championship,15,Stoke City
+Lewis,Championship,16,Blackburn Rovers
+Lewis,Championship,17,Preston North End
+Lewis,Championship,18,Queens Park Rangers
+Lewis,Championship,19,Oxford United
+Lewis,Championship,20,Derby County
+Lewis,Championship,21,Portsmouth
+Lewis,Championship,22,Charlton Athletic
+Lewis,Championship,23,Hull City
+Lewis,Championship,24,Sheffield Wednesday
 Cai,Premier League,1,Manchester City
 Cai,Premier League,2,Arsenal
 Cai,Premier League,3,Liverpool
@@ -52,37 +76,37 @@ Cai,Championship,10,Ipswich Town
 Cai,Championship,11,Stoke City
 Cai,Championship,12,Bristol City
 Cai,Championship,13,Watford
-Cai,Championship,14,Oxford United
+Cai,Championship,14,Hull City
 Cai,Championship,15,Middlesbrough
 Cai,Championship,16,Millwall
 Cai,Championship,17,Blackburn Rovers
-Cai,Championship,18,Queens Park Rangers
+Cai,Championship,18,Oxford United
 Cai,Championship,19,Portsmouth
 Cai,Championship,20,Preston North End
 Cai,Championship,21,Derby County
 Cai,Championship,22,Charlton Athletic
-Cai,Championship,23,Hull City
+Cai,Championship,23,Queens Park Rangers
 Cai,Championship,24,Sheffield Wednesday
 Tom,Premier League,1,Chelsea
-Tom,Premier League,2,Liverpool
-Tom,Premier League,3,Arsenal
+Tom,Premier League,2,Arsenal
+Tom,Premier League,3,Liverpool
 Tom,Premier League,4,Manchester City
 Tom,Premier League,5,Manchester United
-Tom,Premier League,6,Newcastle United
+Tom,Premier League,6,Aston Villa
 Tom,Premier League,7,Tottenham Hotspur
-Tom,Premier League,8,Aston Villa
+Tom,Premier League,8,Newcastle United
 Tom,Premier League,9,Fulham
-Tom,Premier League,10,Brighton & Hove Albion
-Tom,Premier League,11,Crystal Palace
-Tom,Premier League,12,AFC Bournemouth
+Tom,Premier League,10,AFC Bournemouth
+Tom,Premier League,11,Brighton & Hove Albion
+Tom,Premier League,12,Crystal Palace
 Tom,Premier League,13,Wolverhampton Wanderers
-Tom,Premier League,14,Brentford
-Tom,Premier League,15,Burnley
-Tom,Premier League,16,Leeds United
-Tom,Premier League,17,Nottingham Forest
-Tom,Premier League,18,Everton
+Tom,Premier League,14,Nottingham Forest
+Tom,Premier League,15,Sunderland
+Tom,Premier League,16,Everton
+Tom,Premier League,17,Leeds United
+Tom,Premier League,18,Brentford
 Tom,Premier League,19,West Ham United
-Tom,Premier League,20,Sunderland
+Tom,Premier League,20,Burnley
 Tom,Championship,1,Ipswich Town
 Tom,Championship,2,Birmingham City
 Tom,Championship,3,Leicester City
@@ -90,20 +114,108 @@ Tom,Championship,4,Southampton
 Tom,Championship,5,Sheffield United
 Tom,Championship,6,Coventry City
 Tom,Championship,7,Norwich City
-Tom,Championship,8,Wrexham
-Tom,Championship,9,Middlesbrough
-Tom,Championship,10,West Bromwich Albion
-Tom,Championship,11,Bristol City
-Tom,Championship,12,Stoke City
-Tom,Championship,13,Watford
-Tom,Championship,14,Millwall
-Tom,Championship,15,Swansea City
-Tom,Championship,16,Derby County
-Tom,Championship,17,Blackburn Rovers
-Tom,Championship,18,Queens Park Rangers
-Tom,Championship,19,Charlton Athletic
-Tom,Championship,20,Hull City
+Tom,Championship,8,West Bromwich Albion
+Tom,Championship,9,Wrexham
+Tom,Championship,10,Swansea City
+Tom,Championship,11,Queens Park Rangers
+Tom,Championship,12,Middlesbrough
+Tom,Championship,13,Bristol City
+Tom,Championship,14,Stoke City
+Tom,Championship,15,Watford
+Tom,Championship,16,Millwall
+Tom,Championship,17,Derby County
+Tom,Championship,18,Blackburn Rovers
+Tom,Championship,19,Oxford United
+Tom,Championship,20,Charlton Athletic
 Tom,Championship,21,Preston North End
-Tom,Championship,22,Oxford United
-Tom,Championship,23,Portsmouth
+Tom,Championship,22,Portsmouth
+Tom,Championship,23,Hull City
 Tom,Championship,24,Sheffield Wednesday
+Ben,Premier League,1,Liverpool
+Ben,Premier League,2,Manchester City
+Ben,Premier League,3,Arsenal
+Ben,Premier League,4,Chelsea
+Ben,Premier League,5,Aston Villa
+Ben,Premier League,6,Crystal Palace
+Ben,Premier League,7,Tottenham Hotspur
+Ben,Premier League,8,Newcastle United
+Ben,Premier League,9,Manchester United
+Ben,Premier League,10,Brighton & Hove Albion
+Ben,Premier League,11,AFC Bournemouth
+Ben,Premier League,12,Everton
+Ben,Premier League,13,Nottingham Forest
+Ben,Premier League,14,Wolverhampton Wanderers
+Ben,Premier League,15,Fulham
+Ben,Premier League,16,Leeds United
+Ben,Premier League,17,West Ham United
+Ben,Premier League,18,Sunderland
+Ben,Premier League,19,Brentford
+Ben,Premier League,20,Burnley
+Ben,Championship,1,Sheffield United
+Ben,Championship,2,Leicester City
+Ben,Championship,3,Birmingham City
+Ben,Championship,4,Coventry City
+Ben,Championship,5,Ipswich Town
+Ben,Championship,6,Southampton
+Ben,Championship,7,Swansea City
+Ben,Championship,8,West Bromwich Albion
+Ben,Championship,9,Bristol City
+Ben,Championship,10,Preston North End
+Ben,Championship,11,Watford
+Ben,Championship,12,Wrexham
+Ben,Championship,13,Derby County
+Ben,Championship,14,Millwall
+Ben,Championship,15,Norwich City
+Ben,Championship,16,Blackburn Rovers
+Ben,Championship,17,Middlesbrough
+Ben,Championship,18,Charlton Athletic
+Ben,Championship,19,Portsmouth
+Ben,Championship,20,Sheffield Wednesday
+Ben,Championship,21,Oxford United
+Ben,Championship,22,Stoke City
+Ben,Championship,23,Queens Park Rangers
+Ben,Championship,24,Hull City
+Cathal,Premier League,1,Liverpool
+Cathal,Premier League,2,Arsenal
+Cathal,Premier League,3,Manchester City
+Cathal,Premier League,4,Chelsea
+Cathal,Premier League,5,Aston Villa
+Cathal,Premier League,6,Newcastle United
+Cathal,Premier League,7,Nottingham Forest
+Cathal,Premier League,8,Tottenham Hotspur
+Cathal,Premier League,9,Manchester United
+Cathal,Premier League,10,Brighton & Hove Albion
+Cathal,Premier League,11,Everton
+Cathal,Premier League,12,Crystal Palace
+Cathal,Premier League,13,AFC Bournemouth
+Cathal,Premier League,14,Brentford
+Cathal,Premier League,15,West Ham United
+Cathal,Premier League,16,Wolverhampton Wanderers
+Cathal,Premier League,17,Fulham
+Cathal,Premier League,18,Leeds United
+Cathal,Premier League,19,Burnley
+Cathal,Premier League,20,Sunderland
+Cathal,Championship,1,Ipswich Town
+Cathal,Championship,2,Southampton
+Cathal,Championship,3,Sheffield United
+Cathal,Championship,4,Leicester City
+Cathal,Championship,5,Coventry City
+Cathal,Championship,6,Birmingham City
+Cathal,Championship,7,Norwich City
+Cathal,Championship,8,Bristol City
+Cathal,Championship,9,Middlesbrough
+Cathal,Championship,10,Blackburn Rovers
+Cathal,Championship,11,West Bromwich Albion
+Cathal,Championship,12,Stoke City
+Cathal,Championship,13,Wrexham
+Cathal,Championship,14,Watford
+Cathal,Championship,15,Millwall
+Cathal,Championship,16,Queens Park Rangers
+Cathal,Championship,17,Swansea City
+Cathal,Championship,18,Hull City
+Cathal,Championship,19,Derby County
+Cathal,Championship,20,Charlton Athletic
+Cathal,Championship,21,Portsmouth
+Cathal,Championship,22,Sheffield Wednesday
+Cathal,Championship,23,Preston North End
+Cathal,Championship,24,Oxford United
