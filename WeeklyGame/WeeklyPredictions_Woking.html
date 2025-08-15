@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Weekly Premier League Predictions</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        nav { margin-bottom: 20px; }
+        nav button { margin-right: 10px; padding: 8px 12px; cursor: pointer; }
+        section { display: none; }
+        section.active { display: block; }
+        table { border-collapse: collapse; margin: 10px 0; width: 100%; max-width: 800px; }
+        th, td { border: 1px solid #ddd; padding: 6px 10px; text-align: center; }
+        th { background: #f0f0f0; }
+        .player-block { margin-bottom: 30px; }
+        h3 { margin-top: 30px; }
+        .correct { color: green; font-weight: bold; }
+        .wrong { color: red; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>Premier League Weekly Predictions</h1>
+
+    <nav>
+        <button onclick="showTab('fixturesTab')">Upcoming Fixtures</button>
+        <button onclick="showTab('resultsTab')">Results</button>
+        <button onclick="showTab('individualTab')">Individual Results</button>
+        <button onclick="showTab('leaderboardTab')">Leaderboard</button>
+    </nav>
+
+    <section id="fixturesTab" class="active">
+        <h2>Upcoming Fixtures</h2>
+        <div id="fixtures"></div>
+    </section>
+
+    <section id="resultsTab">
+        <h2>Past Results</h2>
+        <div id="results"></div>
+    </section>
+
+    <section id="individualTab">
+        <h2>Individual Results</h2>
+        <div id="individualResults"></div>
+    </section>
+
+    <section id="leaderboardTab">
+        <h2>Leaderboard</h2>
+        <div id="leaderboard"></div>
+    </section>
+
+    <script>
+        function showTab(id) {
+            document.querySelectorAll("section").forEach(sec => sec.classList.remove("active"));
+            document.getElementById(id).classList.add("active");
+        }
+
+        async function loadCSV(file) {
+            const resp = await fetch(file);
+            const text = await resp.text();
+            const rows = text.trim().split("\n").map(r => r.split(","));
+            const headers = rows.shift();
+            return rows.map(r => Object.fromEntries(r.map((val, i) => [headers[i], val])));
+        }
+
+        function checkPrediction(pred, fixture) {
+            const predTeam = pred.Prediction.toLowerCase();
+            const homeScore = Number(fixture.HomeScore);
+            const awayScore = Number(fixture.AwayScore);
+
+            if (isNaN(homeScore) || isNaN(awayScore)) return "-"; // no result yet
+
+            if (predTeam === "draw") {
+                return homeScore === awayScore ? "correct" : "wrong";
+            } else if (predTeam === fixture.Home.toLowerCase()) {
+                return homeScore > awayScore ? "correct" : "wrong";
+            } else if (predTeam === fixture.Away.toLowerCase()) {
+                return awayScore > homeScore ? "correct" : "wrong";
+            }
+            return "wrong";
+        }
+
+        async function init() {
+            const fixtures = await loadCSV("fixtures.csv");
+            const predictions = await loadCSV("weekly_predictions_Woking.csv");
+
+            // Calculate Outcome for each prediction
+            for (let p of predictions) {
+                const f = fixtures.find(fx => fx.Gameweek === p.Gameweek && `${fx.Home} Vs ${fx.Away}` === p.Match);
+                if (f && (f.HomeScore || f.AwayScore)) {
+                    p.Outcome = checkPrediction(p, f);
+                }
+            }
+
+            // Group fixtures by gameweek
+            const grouped = {};
+            for (let f of fixtures) {
+                if (!grouped[f.Gameweek]) grouped[f.Gameweek] = [];
+                grouped[f.Gameweek].push(f);
+            }
+
+            // ---------- RESULTS ----------
+            let resultsHTML = "";
+            for (let gw in grouped) {
+                const games = grouped[gw];
+                const hasScores = games.some(g => g.HomeScore || g.AwayScore);
+
+                if (hasScores) {
+                    resultsHTML += `<h3>Gameweek ${gw}</h3><table><tr>
+                        <th>Home</th><th>Score</th><th>Away</th><th>Predictions</th></tr>`;
+
+                    for (let g of games) {
+                        if (!g.HomeScore && !g.AwayScore) continue;
+
+                        const matchName = `${g.Home} Vs ${g.Away}`;
+                        const matchPreds = predictions.filter(p => p.Gameweek === gw && p.Match === matchName);
+
+                        let predText = "";
+                        if (matchPreds.length > 0) {
+                            predText = matchPreds.map(p => {
+                                let cls = p.Outcome === "correct" ? "correct" : (p.Outcome === "wrong" ? "wrong" : "");
+                                return `<span class="${cls}">${p.Player}: ${p.Prediction} (${p.Outcome || "-"})</span>`;
+                            }).join("<br>");
+                        }
+
+                        resultsHTML += `<tr>
+                            <td>${g.Home}</td>
+                            <td>${g.HomeScore || ""} - ${g.AwayScore || ""}</td>
+                            <td>${g.Away}</td>
+                            <td>${predText}</td>
+                        </tr>`;
+                    }
+                    resultsHTML += "</table>";
+                }
+            }
+            document.getElementById("results").innerHTML = resultsHTML || "<p>No results available yet.</p>";
+
+            // ---------- UPCOMING FIXTURES ----------
+            let upcomingHTML = "";
+            let nextWeek = null;
+            for (let gw in grouped) {
+                const games = grouped[gw];
+                const allNoScores = games.every(g => !g.HomeScore && !g.AwayScore);
+                if (allNoScores) {
+                    nextWeek = gw;
+                    break;
+                }
+            }
+
+            if (nextWeek) {
+                const games = grouped[nextWeek];
+                upcomingHTML += `<h3>Gameweek ${nextWeek}</h3><table><tr>
+                    <th>Home</th><th>Vs</th><th>Away</th><th>Predictions</th></tr>`;
+
+                for (let g of games) {
+                    const matchName = `${g.Home} Vs ${g.Away}`;
+                    const matchPreds = predictions.filter(p => p.Gameweek === nextWeek && p.Match === matchName);
+
+                    let predText = "";
+                    if (matchPreds.length > 0) {
+                        predText = matchPreds.map(p => `${p.Player}: ${p.Prediction}`).join("<br>");
+                    }
+
+                    upcomingHTML += `<tr>
+                        <td>${g.Home}</td>
+                        <td>vs</td>
+                        <td>${g.Away}</td>
+                        <td>${predText}</td>
+                    </tr>`;
+                }
+                upcomingHTML += "</table>";
+            } else {
+                upcomingHTML = "<p>No upcoming fixtures found.</p>";
+            }
+            document.getElementById("fixtures").innerHTML = upcomingHTML;
+
+            // ---------- INDIVIDUAL RESULTS + LEADERBOARD ----------
+            const players = [...new Set(predictions.map(p => p.Player))];
+            let indivHTML = "";
+            let leaderboardTotals = {};
+
+            for (let player of players) {
+                const playerPreds = predictions.filter(p => p.Player === player);
+                const weeks = [...new Set(playerPreds.map(p => p.Gameweek))].sort((a, b) => a - b);
+                let totalPoints = 0;
+                let nextAllowed = 1;
+
+                indivHTML += `<div class="player-block"><h3>${player}</h3><table><tr><th>Gameweek</th><th>Correct</th><th>Points</th><th>Allowed Next Week</th></tr>`;
+
+                for (let gw of weeks) {
+                    const weekPreds = playerPreds.filter(p => p.Gameweek === gw);
+                    const allCorrect = weekPreds.every(p => p.Outcome === "correct");
+                    const weekPoints = allCorrect ? weekPreds.length : 0;
+                    totalPoints += weekPoints;
+                    nextAllowed = allCorrect ? weekPreds.length + 1 : 1;
+                    nextAllowed = Math.min(nextAllowed, 10);
+                    
+                    // Please change the picture for tick and cross when you get a chance :)
+                    indivHTML += `<tr>
+                        <td>${gw}</td>
+                        <td> 
+                            ${allCorrect 
+                            ? '<img src="Tick.jpeg" alt="correct" width="16" height="16">'.repeat(weekPreds.length) 
+                            : '<img src="cross.png" alt="wrong" width="16" height="16">'.repeat(weekPreds.length)
+                            }
+                        </td>
+                        <td>${weekPoints}</td>
+                        <td>${nextAllowed}</td>
+                    </tr>`;
+                }
+
+                indivHTML += `</table><p><strong>Total Points:</strong> ${totalPoints}</p></div>`;
+                leaderboardTotals[player] = totalPoints;
+            }
+
+            document.getElementById("individualResults").innerHTML = indivHTML;
+
+            let lbHTML = `<table><tr><th>Player</th><th>Total Points</th></tr>`;
+            Object.entries(leaderboardTotals)
+                .sort((a, b) => b[1] - a[1])
+                .forEach(([player, points]) => {
+                    lbHTML += `<tr><td>${player}</td><td>${points}</td></tr>`;
+                });
+            lbHTML += "</table>";
+
+            document.getElementById("leaderboard").innerHTML = lbHTML;
+        }
+
+        init();
+    </script>
+</body>
+</html>
