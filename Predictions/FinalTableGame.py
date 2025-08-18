@@ -191,7 +191,7 @@ def main():
 
     html_content = generate_html(real_tables, user_results, user_totals)
 
-    with open("final_results.html", "w", encoding="utf-8") as f:
+    with open("Predictions/final_results.html", "w", encoding="utf-8") as f:
         f.write(html_content)
     print("final_results.html generated!")
 
