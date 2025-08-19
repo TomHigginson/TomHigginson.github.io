@@ -48,6 +48,7 @@
         <div id="leaderboard"></div>
     </section>
 
+    <script src="../TeamData.js"></script>
     <script>
         function showTab(id) {
             document.querySelectorAll("section").forEach(sec => sec.classList.remove("active"));
@@ -79,33 +80,18 @@
             return "wrong";
         }
 
-         const teamColours = {
-            "Arsenal": { bg: "#EF0107", fg: "#FFFFFF" },
-            "Aston Villa": { bg: "#95BFE5", fg: "#670E36" },
-            "AFC Bournemouth": { bg: "#DA291C", fg: "#000000" },
-            "Brighton & Hove Albion": { bg: "#0057B8", fg: "#FFFFFF" },
-            "Brentford": { bg: "#e30613", fg: "#ffffff" },
-            "Burnley": { bg: "#6C1D45", fg: "#99D6EA" },
-            "Chelsea": { bg: "#034694", fg: "#FFFFFF" },
-            "Crystal Palace": { bg: "#1B458F", fg: "#C4122E" },
-            "Everton": { bg: "#003399", fg: "#FFFFFF" },
-            "Fulham": { bg: "#FFFFFF", fg: "#000000" },
-            "Leeds United": { bg: "#FFFFF", fg: "#0060A9" },
-            "Liverpool": { bg: "#C8102E", fg: "#00B2A9" },
-            "Manchester City": { bg: "#6CABDD", fg: "#1C2C5B" },
-            "Manchester United": { bg: "#DA291C", fg: "#FBE122" },
-            "Newcastle United": { bg: "#241F20", fg: "#FFFFFF" },
-            "Nottingham Forest": { bg: "#E53233", fg: "#FFFFFF" },
-            "Sunderland": { bg: "#FFFFFF", fg: "#EB172B" },
-            "Tottenham Hotspur": { bg: "#132257", fg: "#FFFFFF" },
-            "West Ham United": { bg: "#7A263A", fg: "#1BB1E7" },
-            "Wolverhampton Wanderers": { bg: "#FDB913", fg: "#231F20" },
-            "draw": { bg: "#A9A5AD", fg: "#FFFFFF" },
-        };
+        function teamCell(team, side) {
+            const c = teamColours[team] || { bg: "#fff", fg: "#000" };
+            const logo = teamLogos[team] 
+                ? `<img src="${teamLogos[team]}" alt="${team}" width="20" height="20" style="vertical-align:middle; margin:0 5px;">` 
+                : "";
 
-        function teamCell(team) {
-        const c = teamColours[team] || { bg: "#fff", fg: "#000" };
-        return `<td style="background:${c.bg}; color:${c.fg}; font-weight:bold;">${team}</td>`;
+                // Check here for altering alignment - centering on the score looks best to me
+            if (side === "Home") {
+                return `<td style="background:${c.bg}; color:${c.fg}; font-weight:bold; padding:4px; text-align:right;">${team}${logo}</td>`;
+            } else {
+                return `<td style="background:${c.bg}; color:${c.fg}; font-weight:bold; padding:4px; text-align:left;">${logo}${team}</td>`;
+            }
         }
 
         async function init() {
@@ -152,9 +138,9 @@
                         }
 
                         resultsHTML += `<tr>
-                            ${teamCell(g.Home)}
+                            ${teamCell(g.Home, "Home")}
                             <td>${g.HomeScore || ""} - ${g.AwayScore || ""}</td>
-                            ${teamCell(g.Away)}
+                            ${teamCell(g.Away, "Away")}
                             <td>${predText}</td>
                         </tr>`;
                     }
@@ -193,9 +179,9 @@
             }
 
                     upcomingHTML += `<tr>
-                        ${teamCell(g.Home)}
+                        ${teamCell(g.Home, "Home")}
                         <td>${g.HomeScore || ""} - ${g.AwayScore || ""}</td>
-                        ${teamCell(g.Away)}
+                        ${teamCell(g.Away, "Away")}
                         <td>${predText}</td>
                     </tr>`;
                 }
