@@ -105,46 +105,58 @@ def generate_html(real_tables, user_results, user_totals):
       background: #460001;
       padding: 20px;
       color: white;
-      }
-      table { 
+    }
+    table { 
       border-collapse: collapse;
       width: 100%; 
       background: rgb(8, 2, 35);
       margin-bottom: 2em; 
-      }
-      th, td { 
+    }
+    th, td { 
       border: 1px solid #ccc; 
       padding: 5px 10px; 
-      }
-      th { 
+      text-align: center;
+    }
+    th { 
       background-color: #034f27; 
-      }
-      .score { 
-      text-align: center; 
+    }
+    .score { 
       font-weight: bold; 
-      }
-      h2 { 
-      margin-top: 40px; 
-      }
+    }
+    .team-cell {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      justify-content: flex-start;
+    }
+    .team-logo {
+      width: 20px;
+      height: 20px;
+      object-fit: contain;
+    }
     </style>
+    <script src="../TeamData.js"></script>
     </head><body>
     <h1>Predictor League - Final Results</h1>
-    Tables are pulled directly from the bbc sports website
+    <p>Tables are pulled directly from the BBC Sports website</p>
     """
 
+    # Leaderboard
     html += "<h2>Leaderboard</h2><table><thead><tr><th>Player</th><th>Premier League</th><th>Championship</th><th>Total</th></tr></thead><tbody>"
     leaderboard = sorted(user_totals.items(), key=lambda x: x[1]['Total'], reverse=True)
     for name, scores in leaderboard:
         html += f"<tr><td>{name}</td><td>{scores['Premier League']}</td><td>{scores['Championship']}</td><td><strong>{scores['Total']}</strong></td></tr>"
     html += "</tbody></table>\n"
 
+    # Actual tables
     for league, df in real_tables.items():
         html += f"<h2>{league} - Actual Table</h2>\n"
         html += "<table><thead><tr><th>Position</th><th>Team</th><th>Points</th></tr></thead><tbody>\n"
         for _, row in df.iterrows():
-            html += f"<tr><td>{row['Position']}</td><td>{row['Team']}</td><td>{row['Points']}</td></tr>\n"
+            html += f"<tr><td>{row['Position']}</td><td class='team-name' data-team='{row['Team']}'>{row['Team']}</td><td>{row['Points']}</td></tr>\n"
         html += "</tbody></table>\n"
 
+    # Predictions
     for player, leagues in user_results.items():
         total_score = user_totals[player]['Total']
         html += f"<h2>Predictions & Scores for {player} (Total: {total_score})</h2>\n"
@@ -152,12 +164,37 @@ def generate_html(real_tables, user_results, user_totals):
             running_total = 0
             league_score = user_totals[player][league]
             html += f"<h3>{league} (Score: {league_score})</h3>\n"
-            html += "<table><thead><tr><th>Predicted</th><th>Team</th><th>Actual</th><th>Points Difference</th><th>Score</th><th>Running Total</th></tr></thead><tbody>\n"
+            html += "<table><thead><tr><th>Predicted</th><th>Team</th><th>Actual</th><th>Points Diff</th><th>Score</th><th>Running Total</th></tr></thead><tbody>\n"
             for s in scores:
                 running_total += s['Score']
-                html += f"<tr><td>{s['Predicted']}</td><td>{s['Team']}</td><td>{s['Real']}</td><td>{s['Points_Diff']}</td><td class='score'>{s['Score']}</td><td>{running_total}</td></tr>\n"
+                html += f"<tr><td>{s['Predicted']}</td><td class='team-name' data-team='{s['Team']}'>{s['Team']}</td><td>{s['Real']}</td><td>{s['Points_Diff']}</td><td class='score'>{s['Score']}</td><td>{running_total}</td></tr>\n"
             html += "</tbody></table>\n"
-    html += "</body></html>"
+
+    # JS to style team cells
+    html += """
+    <script>
+    document.querySelectorAll(".team-name").forEach(cell => {
+    const team = cell.dataset.team;
+    if (teamColours[team]) {
+        cell.style.backgroundColor = teamColours[team].bg;
+        cell.style.color = teamColours[team].fg;
+    }
+    if (teamLogos[team]) {
+        const logo = document.createElement("img");
+        logo.src = teamLogos[team];
+        logo.className = "team-logo";
+        const wrapper = document.createElement("div");
+        wrapper.className = "team-cell";
+        wrapper.appendChild(logo);
+        wrapper.appendChild(document.createTextNode(team));
+        cell.innerHTML = "";
+        cell.appendChild(wrapper);
+    }
+    });
+    </script>
+    </body></html>
+    """
+
     return html
 
 def main(): 
