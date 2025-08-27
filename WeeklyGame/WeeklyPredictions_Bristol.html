@@ -206,24 +206,30 @@
 
                 for (let gw of weeks) {
                     const weekPreds = playerPreds.filter(p => p.Gameweek === gw);
-                    const allCorrect = weekPreds.every(p => p.Outcome === "correct");
+
+                    const correctCount = weekPreds.filter(p => p.Outcome === "correct").length;
+                    const wrongCount = weekPreds.length - correctCount;
+
+                    // Scoring rules: points only if ALL correct
+                    // CHANGE THIS IF RULES CHANGE!!!!
+                    const allCorrect = (correctCount === weekPreds.length);
                     const weekPoints = allCorrect ? weekPreds.length : 0;
                     totalPoints += weekPoints;
+
                     nextAllowed = allCorrect ? weekPreds.length + 1 : 1;
                     nextAllowed = Math.min(nextAllowed, 10);
-                    
-                    // Please change the picture for tick and cross when you get a chance :)
+
+                    const tickImg = '<img src="Tick.jpeg" alt="correct" width="16" height="16">';
+                    const crossImg = '<img src="cross.png" alt="wrong" width="16" height="16">';
+                    const icons = tickImg.repeat(correctCount) + crossImg.repeat(wrongCount);
+
                     indivHTML += `<tr>
                         <td>${gw}</td>
-                        <td> 
-                            ${allCorrect 
-                            ? '<img src="Tick.jpeg" alt="correct" width="16" height="16">'.repeat(weekPreds.length) 
-                            : '<img src="cross.png" alt="wrong" width="16" height="16">'.repeat(weekPreds.length)
-                            }
-                        </td>
+                        <td>${icons}</td>
                         <td>${weekPoints}</td>
                         <td>${nextAllowed}</td>
                     </tr>`;
+
                 }
 
                 indivHTML += `</table><p><strong>Total Points:</strong> ${totalPoints}</p></div>`;
