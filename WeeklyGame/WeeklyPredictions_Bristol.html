@@ -214,7 +214,7 @@
                     // CHANGE THIS IF RULES CHANGE!!!!
                     const allCorrect = (correctCount === weekPreds.length);
                     const weekPoints = allCorrect ? weekPreds.length : 0;
-                    totalPoints += weekPoints;
+                    totalPoints += allCorrect;
 
                     nextAllowed = allCorrect ? weekPreds.length + 1 : 1;
                     nextAllowed = Math.min(nextAllowed, 10);
