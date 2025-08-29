@@ -210,11 +210,11 @@
                     const correctCount = weekPreds.filter(p => p.Outcome === "correct").length;
                     const wrongCount = weekPreds.length - correctCount;
 
-                    // Scoring rules: points only if ALL correct
+                    // Scoring rules: points if any predicted game is correct
                     // CHANGE THIS IF RULES CHANGE!!!!
                     const allCorrect = (correctCount === weekPreds.length);
                     const weekPoints = allCorrect ? weekPreds.length : 0;
-                    totalPoints += allCorrect;
+                    totalPoints += correctCount; // Change here: allCorrect
 
                     nextAllowed = allCorrect ? weekPreds.length + 1 : 1;
                     nextAllowed = Math.min(nextAllowed, 10);
