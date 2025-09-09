@@ -19,16 +19,16 @@
 2,Everton,2,0,Brighton & Hove Albion,24/08/2025,14:00
 2,Fulham,1,1,Manchester United,24/08/2025,16:30
 2,Newcastle United,2,3,Liverpool,25/08/2025,20:00
-3,Chelsea,,,Fulham,30/08/2025,12:30
-3,Manchester United,,,Burnley,30/08/2025,15:00
-3,Sunderland,,,Brentford,30/08/2025,15:00
-3,Tottenham Hotspur,,,AFC Bournemouth,30/08/2025,15:00
-3,Wolverhampton Wanderers,,,Everton,30/08/2025,15:00
-3,Leeds United,,,Newcastle United,30/08/2025,17:30
-3,Brighton & Hove Albion,,,Manchester City,31/08/2025,14:00
-3,Nottingham Forest,,,West Ham United,31/08/2025,14:00
-3,Liverpool,,,Arsenal,31/08/2025,16:30
-3,Aston Villa,,,Crystal Palace,31/08/2025,19:00
+3,Chelsea,2,0,Fulham,30/08/2025,12:30
+3,Manchester United,3,2,Burnley,30/08/2025,15:00
+3,Sunderland,2,1,Brentford,30/08/2025,15:00
+3,Tottenham Hotspur,0,1,AFC Bournemouth,30/08/2025,15:00
+3,Wolverhampton Wanderers,2,3,Everton,30/08/2025,15:00
+3,Leeds United,0,0,Newcastle United,30/08/2025,17:30
+3,Brighton & Hove Albion,2,1,Manchester City,31/08/2025,14:00
+3,Nottingham Forest,0,3,West Ham United,31/08/2025,14:00
+3,Liverpool,1,0,Arsenal,31/08/2025,16:30
+3,Aston Villa,0,3,Crystal Palace,31/08/2025,19:00
 4,Arsenal,,,Nottingham Forest,13/09/2025,12:30
 4,AFC Bournemouth,,,Brighton & Hove Albion,13/09/2025,15:00
 4,Crystal Palace,,,Sunderland,13/09/2025,15:00
@@ -39,3 +39,13 @@
 4,Brentford,,,Chelsea,13/09/2025,20:00
 4,Burnley,,,Liverpool,14/09/2025,14:00
 4,Manchester City,,,Manchester United,14/09/2025,16:30
+5,Liverpool,,,Everton,20/09/2025,12:30
+5,Brighton & Hove Albion,,,Tottenham Hotspur,20/09/2025,15:00
+5,Burnley,,,Nottingham Forest,20/09/2025,15:00
+5,West Ham United,,,Crystal Palace,20/09/2025,15:00
+5,Wolverhampton Wanderers,,,Leeds United,20/09/2025,15:00
+5,Manchester United,,,Chelsea,20/09/2025,17:30
+5,Fulham,,,Brentford,20/09/2025,20:00
+5,AFC Bournemouth,,,Newcastle United,21/09/2025,14:00
+5,Sunderland,,,Aston Villa,21/09/2025,14:00
+5,Arsenal,,,Manchester City,21/09/2025,16:30
