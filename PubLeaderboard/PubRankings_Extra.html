@@ -243,35 +243,25 @@ const headerLabels = {
     }
     
     else if (colName === "Location") {
-      const extractPostcodeParts = (str) => {
-        const postcode = str.split(",").slice(-1)[0].trim().toUpperCase();
-        const match = postcode.match(/^([A-Z]+)(\d+)\s*(\w{1,3})$/);
-        if (match) {
-          const area = match[1];             
-          const district = parseInt(match[2], 10); 
-          const inward = match[3];           
-          return [area, district, inward];
-        } else {
-          return ["", 0, ""]; 
-        }
-      };
+      const extractPostcode = (str) => {
+      const parts = str.split(",");
+      const postcode = parts[parts.length - 1].trim().toUpperCase();
+      const match = postcode.match(/[A-Z]{1,2}\d{1,2}\s*\d?[A-Z]{2}/);
+      return match ? match[0].replace(/\s+/, "") : "";
+    };
 
-      const [areaA, distA, inwardA] = extractPostcodeParts(a.cells[colIndex].innerText);
-      const [areaB, distB, inwardB] = extractPostcodeParts(b.cells[colIndex].innerText);
+    const postA = extractPostcode(a.cells[colIndex].innerText);
+    const postB = extractPostcode(b.cells[colIndex].innerText);
 
-      if (areaA !== areaB) {
-        return ascending ? areaA.localeCompare(areaB) : areaB.localeCompare(areaA);
-      } else if (distA !== distB) {
-        return ascending ? distA - distB : distB - distA;
-      } else {
-        return ascending ? inwardA.localeCompare(inwardB) : inwardB.localeCompare(inwardA);
-      }
+    return ascending
+    ? postA.localeCompare(postB, "en", { numeric: true })
+    : postB.localeCompare(postA, "en", { numeric: true });
     }
 
     else if (colName === "PreGuinness" || colName === "PreFood" ) {
       const valA = parseFloat(a.cells[colIndex].getAttribute("data-total")) || 0;
       const valB = parseFloat(b.cells[colIndex].getAttribute("data-total")) || 0;
-      return ascending ? valA - valB : valB - valA; 
+      return ascending ? valB - valA : valA - valB; 
     }
 
 
@@ -281,12 +271,12 @@ const headerLabels = {
       const totalFillB = b.cells[colIndex].querySelector(".total-bar-fill");
       let widthA = totalFillA ? parseFloat(totalFillA.style.width) : 0;
       let widthB = totalFillB ? parseFloat(totalFillB.style.width) : 0;
-      return ascending ? widthA - widthB : widthB - widthA;
+      return ascending ? widthB - widthA : widthA - widthB;
     }
     else if (colName === "Rank" || colName === "PostGuinnessTotal") {
       valA = parseFloat(a.cells[colIndex].innerText) || 0;
       valB = parseFloat(b.cells[colIndex].innerText) || 0;
-      return ascending ? valA - valB : valB - valA;
+      return ascending ? valB - valA : valA - valB;
     }
     else {
       valA = a.cells[colIndex].innerText.trim();
