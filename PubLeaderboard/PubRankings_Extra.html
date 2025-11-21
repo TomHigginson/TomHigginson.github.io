@@ -79,7 +79,19 @@
     top: -1px; 
     background-color: #05331b;
     z-index: 5;
-}
+    }
+    a:link {
+    color: rgb(255, 219, 38);
+    background-color: transparent;
+    text-decoration: underline;
+    }
+
+    a:visited {
+    color: pink;
+    background-color: transparent;
+    text-decoration: none;
+    }
+
   </style>
 </head>
 <body>
@@ -173,7 +185,12 @@ const headerLabels = {
     data.forEach((row, index) => {
       const tr = document.createElement("tr");
       const doesGuinness = (row["DoesGuinness?"] || "").trim().toLowerCase() === "y";
-      tr.innerHTML = `<td>${index + 1}</td><td>${row.Name}</td><td>${row.Location}</td>`;
+      tr.innerHTML = `
+        <td>${index + 1}</td>
+        <td><a href="pub.html?name=${encodeURIComponent(row.Name)}">${row.Name}</a></td>
+        <td>${row.Location}</td>
+      `;
+
 
       categoryNames.forEach(cat => {
         let benKey = `${cat}_Ben`;
