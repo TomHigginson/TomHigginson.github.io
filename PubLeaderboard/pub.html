@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title id="pub-title">Pub</title>
+
+  <style>
+    body { font-family: Arial; padding: 20px; background: #450202; color: rgb(163, 163, 163); }
+    table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+    th, td { border: 1px solid #ffffff; padding: 10px; text-align: center; }
+    th { background: #043b03; }
+    .container { max-width: 900px; margin: auto; background: rgb(8, 2, 35); padding: 20px; border-radius: 10px; }
+    .na-box {
+      background: #05331b;
+      color: #b30000;
+      font-weight: bold;
+      padding: 6px;
+      border-radius: 6px;
+      font-size: 0.9em;
+    }
+  </style>
+</head>
+
+<body>
+<div class="container">
+
+  <h1 id="pub-name"></h1>
+  <h3 id="pub-location"></h3>
+  <h2 id="pub-image"></h2>
+
+  <table id="score-table">
+    <thead>
+      <tr>
+        <th>Category</th>
+        <th>Ben</th>
+        <th>Tom</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody id="score-body"></tbody>
+  </table>
+
+  <h2>Summary Scores</h2>
+  <div id="score-summary"></div>
+
+  <h2>Comments</h2>
+  <div id="pub-comments"></div>
+
+</div>
+
+<script src="pub.js"></script>
+</body>
+</html>
+
