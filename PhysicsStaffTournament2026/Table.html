@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Group Tables</title>
+
+<style>
+
+body{
+    font-family: Arial, sans-serif;
+    background:#f5f5f5;
+    padding:30px;
+}
+
+h1{
+    text-align:center;
+}
+
+.container{
+    display:flex;
+    gap:20px;
+    justify-content:center;
+    flex-wrap:wrap;
+}
+
+table{
+    border-collapse:collapse;
+    background:white;
+    width:650px;
+    box-shadow:0 2px 8px rgba(0,0,0,0.1);
+}
+
+th{
+    background:#1f4e79;
+    color:white;
+    padding:10px;
+}
+
+td{
+    border:1px solid #ddd;
+    padding:8px;
+    text-align:center;
+}
+
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+
+</head>
+
+<body>
+
+<h1>Group Tables</h1>
+
+<div class="container">
+
+    <table id="tableA">
+        <thead>
+            <tr><th colspan="8">Group A</th></tr>
+            <tr>
+                <th>Team</th>
+                <th>W</th>
+                <th>D</th>
+                <th>L</th>
+                <th>GF</th>
+                <th>GA</th>
+                <th>GD</th>
+                <th>Pts</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <table id="tableB">
+        <thead>
+            <tr><th colspan="8">Group B</th></tr>
+            <tr>
+                <th>Team</th>
+                <th>W</th>
+                <th>D</th>
+                <th>L</th>
+                <th>GF</th>
+                <th>GA</th>
+                <th>GD</th>
+                <th>Pts</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+</div>
+
+<script>
+
+function initTeam(obj, team){
+    if(!obj[team]){
+        obj[team] = {
+            W:0,
+            D:0,
+            L:0,
+            GF:0,
+            GA:0,
+            Pts:0
+        };
+    }
+}
+
+// ---------------------------
+// LOAD FIXTURES
+// ---------------------------
+
+Papa.parse("fixtures.csv", {
+
+    download:true,
+    header:true,
+
+    complete:function(results){
+
+        let A = {};
+        let B = {};
+
+        results.data.forEach(m => {
+
+            if(!m.Side) return;
+
+            let home = m["Home Team"];
+            let away = m["Away Team"];
+
+            if(!home || !away) return;
+
+            let hs = parseInt(m["Home Goals"]);
+            let as = parseInt(m["Away Goals"]);
+
+            let hasResult =
+                !isNaN(hs) && !isNaN(as);
+
+            if(m.Side === "A"){
+                initTeam(A, home);
+                initTeam(A, away);
+            } else {
+                initTeam(B, home);
+                initTeam(B, away);
+            }
+
+            let group = (m.Side === "A") ? A : B;
+
+            if(!hasResult) return;
+
+            group[home].GF += hs;
+            group[home].GA += as;
+
+            group[away].GF += as;
+            group[away].GA += hs;
+
+            if(hs > as){
+                group[home].W++;
+                group[away].L++;
+                group[home].Pts += 3;
+            }
+            else if(as > hs){
+                group[away].W++;
+                group[home].L++;
+                group[away].Pts += 3;
+            }
+            else{
+                group[home].D++;
+                group[away].D++;
+                group[home].Pts += 1;
+                group[away].Pts += 1;
+            }
+        });
+
+        buildTable(A, "tableA");
+        buildTable(B, "tableB");
+    }
+});
+
+// ---------------------------
+// BUILD TABLE
+// ---------------------------
+
+function buildTable(group, tableId){
+
+    let arr = Object.keys(group).map(team => {
+
+        let t = group[team];
+
+        return {
+            Team: team,
+            W: t.W,
+            D: t.D,
+            L: t.L,
+            GF: t.GF,
+            GA: t.GA,
+            GD: t.GF - t.GA,   // 👈 NEW
+            Pts: t.Pts
+        };
+    });
+
+    arr.sort((a,b) =>
+        b.Pts - a.Pts ||
+        b.GD - a.GD ||
+        b.GF - a.GF
+    );
+
+    let tbody = document.querySelector(`#${tableId} tbody`);
+    tbody.innerHTML = "";
+
+    arr.forEach(t => {
+
+        tbody.innerHTML += `
+            <tr>
+                <td>${t.Team}</td>
+                <td>${t.W}</td>
+                <td>${t.D}</td>
+                <td>${t.L}</td>
+                <td>${t.GF}</td>
+                <td>${t.GA}</td>
+                <td>${t.GD}</td>
+                <td>${t.Pts}</td>
+            </tr>
+        `;
+    });
+}
+
+</script>
+
+</body>
+</html>
+

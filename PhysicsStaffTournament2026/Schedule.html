@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Tournament Dashboard</title>
+
+<style>
+
+body{
+    font-family: Arial, sans-serif;
+    background:#f5f5f5;
+    padding:20px;
+}
+
+h1{
+    text-align:center;
+}
+
+.section{
+    margin-bottom:40px;
+}
+
+table{
+    width:100%;
+    max-width:1200px;
+    margin:auto;
+    border-collapse:collapse;
+    background:white;
+    box-shadow:0 2px 8px rgba(0,0,0,0.1);
+}
+
+th{
+    background:#1f4e79;
+    color:white;
+    padding:10px;
+}
+
+td{
+    border:1px solid #ddd;
+    padding:10px;
+    vertical-align:top;
+}
+
+.time{
+    background:#eee;
+    font-weight:bold;
+    text-align:center;
+    width:120px;
+}
+
+.match{
+    padding:6px;
+    margin-bottom:5px;
+    background:#fafafa;
+    border-radius:5px;
+}
+
+.groupA{
+    border-left:4px solid #2e7d32;
+}
+
+.groupB{
+    border-left:4px solid #1565c0;
+}
+
+.container{
+    display:flex;
+    gap:20px;
+    justify-content:center;
+    flex-wrap:wrap;
+}
+
+.smallTable{
+    width:48%;
+}
+
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+
+</head>
+
+<body>
+
+<h1>Tournament Dashboard</h1>
+
+<div class="section">
+
+<h2>Schedule</h2>
+
+<table>
+
+<thead>
+<tr>
+<th>Time</th>
+<th>Lift Side</th>
+<th>Clock Side</th>
+</tr>
+</thead>
+
+<tbody id="schedule"></tbody>
+
+</table>
+
+</div>
+
+<div class="section">
+
+<h2>Group Tables</h2>
+
+<div class="container">
+
+<table class="smallTable" id="tableA">
+
+<thead>
+
+<tr>
+<th colspan="7">Group A</th>
+</tr>
+
+<tr>
+<th>Team</th>
+<th>W</th>
+<th>D</th>
+<th>L</th>
+<th>GF</th>
+<th>GA</th>
+<th>Pts</th>
+</tr>
+
+</thead>
+
+<tbody></tbody>
+
+</table>
+
+<table class="smallTable" id="tableB">
+
+<thead>
+
+<tr>
+<th colspan="7">Group B</th>
+</tr>
+
+<tr>
+<th>Team</th>
+<th>W</th>
+<th>D</th>
+<th>L</th>
+<th>GF</th>
+<th>GA</th>
+<th>Pts</th>
+</tr>
+
+</thead>
+
+<tbody></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+<div class="section">
+
+<h2>Knockouts</h2>
+
+<table>
+
+<thead>
+<tr>
+<th>Time</th>
+<th>Lift Side</th>
+<th>Clock Side</th>
+</tr>
+</thead>
+
+<tbody id="knockouts"></tbody>
+
+</table>
+
+</div>
+
+<script>
+
+const scheduleBody = document.getElementById("schedule");
+const koBody = document.getElementById("knockouts");
+
+const start = 14 * 60;
+const kstart = 16 * 60;
+const slot = 20;
+
+// ===========================
+// TIME FORMAT
+// ===========================
+
+function formatTime(m){
+
+    return `${Math.floor(m/60)}:${(m%60).toString().padStart(2,'0')}`;
+}
+
+// ===========================
+// TABLE STORAGE
+// ===========================
+
+let A = {};
+let B = {};
+
+function init(obj, t){
+
+    if(!obj[t]){
+
+        obj[t] = {
+            W:0,
+            D:0,
+            L:0,
+            GF:0,
+            GA:0,
+            Pts:0
+        };
+    }
+}
+
+// ===========================
+// LOAD FIXTURES
+// ===========================
+
+Papa.parse("fixtures.csv", {
+
+    download:true,
+    header:true,
+
+    complete:function(res){
+
+        let data = res.data.filter(r => r.Side);
+
+        let i = 0;
+        let round = 0;
+
+        // ===========================
+        // SCHEDULE
+        // ===========================
+
+        while(i < data.length){
+
+            let time = start + round * slot;
+
+            let lift = "";
+            let clock = "";
+
+            for(let x=0; x<2 && i<data.length; x++){
+
+                let m = data[i];
+
+                let hs = m["Home Goals"]?.trim();
+                let as = m["Away Goals"]?.trim();
+
+                let hasResult =
+                    hs !== "" &&
+                    as !== "" &&
+                    !isNaN(parseInt(hs)) &&
+                    !isNaN(parseInt(as));
+
+                let scoreText = hasResult
+                    ? `<b>${hs}-${as}</b>`
+                    : `<b>Vs</b>`;
+
+                let html = `
+                    <div class="match ${m.Side==='A' ? 'groupA' : 'groupB'}">
+                        ${m["Home Team"]} ${scoreText} ${m["Away Team"]}
+                    </div>
+                `;
+
+                if(m.Side === "A"){
+                    lift += html;
+                } else {
+                    clock += html;
+                }
+
+                i++;
+            }
+
+            scheduleBody.innerHTML += `
+                <tr>
+
+                    <td class="time">
+                        ${formatTime(time)}
+                    </td>
+
+                    <td>
+                        ${lift}
+                    </td>
+
+                    <td>
+                        ${clock}
+                    </td>
+
+                </tr>
+            `;
+
+            round++;
+        }
+
+        // ===========================
+        // LOAD KNOCKOUTS
+        // ===========================
+
+        Papa.parse("knockouts.csv", {
+
+            download:true,
+            header:true,
+
+            complete:function(kres){
+
+                let ko = kres.data.filter(r => r.Competition);
+
+                // ===========================
+                // TABLE LOGIC
+                // ===========================
+
+                res.data.forEach(m => {
+
+                    if (!m.Side) return;
+
+                    let h = m["Home Team"]?.trim();
+                    let a = m["Away Team"]?.trim();
+
+                    if (!h || !a) return;
+
+                    if (m.Side === "A") {
+
+                        init(A, h);
+                        init(A, a);
+
+                    } else {
+
+                        init(B, h);
+                        init(B, a);
+                    }
+
+                    let g = (m.Side === "A") ? A : B;
+
+                    let hsText = m["Home Goals"]?.trim();
+                    let asText = m["Away Goals"]?.trim();
+
+                    let hasResult =
+                        hsText !== "" &&
+                        asText !== "" &&
+                        !isNaN(parseInt(hsText)) &&
+                        !isNaN(parseInt(asText));
+
+                    // Skip unfinished games
+                    if (!hasResult) return;
+
+                    let hs = parseInt(hsText);
+                    let as = parseInt(asText);
+
+                    g[h].GF += hs;
+                    g[h].GA += as;
+
+                    g[a].GF += as;
+                    g[a].GA += hs;
+
+                    if (hs > as) {
+
+                        g[h].W++;
+                        g[a].L++;
+                        g[h].Pts += 3;
+
+                    } else if (as > hs) {
+
+                        g[a].W++;
+                        g[h].L++;
+                        g[a].Pts += 3;
+
+                    } else {
+
+                        g[h].D++;
+                        g[a].D++;
+
+                        g[h].Pts++;
+                        g[a].Pts++;
+                    }
+
+                });
+
+                // ===========================
+                // RENDER TABLES
+                // ===========================
+
+                function renderTable(obj,id){
+
+                    let arr = Object.keys(obj).map(t => ({
+                        team:t,
+                        ...obj[t]
+                    }));
+
+                    arr.sort((a,b)=>
+                        b.Pts - a.Pts ||
+                        (b.GF-b.GA) - (a.GF-a.GA)
+                    );
+
+                    let tb = document.querySelector(`#${id} tbody`);
+
+                    tb.innerHTML = "";
+
+                    arr.forEach(t => {
+
+                        tb.innerHTML += `
+                            <tr>
+
+                                <td>${t.team}</td>
+
+                                <td>${t.W}</td>
+                                <td>${t.D}</td>
+                                <td>${t.L}</td>
+
+                                <td>${t.GF}</td>
+                                <td>${t.GA}</td>
+
+                                <td>${t.Pts}</td>
+
+                            </tr>
+                        `;
+                    });
+                }
+
+                renderTable(A, "tableA");
+                renderTable(B, "tableB");
+
+                // ===========================
+                // KO GROUPING
+                // ===========================
+
+                let groups = {};
+
+                ko.forEach(m => {
+
+                    if (!m.Competition || !m.Stage) return;
+
+                    let key = `${m.Competition} - ${m.Stage}`;
+
+                    if (!groups[key]) {
+
+                        groups[key] = {
+                            title: key,
+                            A: [],
+                            B: []
+                        };
+                    }
+
+                    if (m.Side === "A"){
+                        groups[key].A.push(m);
+                    }
+
+                    if (m.Side === "B"){
+                        groups[key].B.push(m);
+                    }
+                });
+
+                // ===========================
+                // KO MATCH HTML
+                // ===========================
+
+                function matchHTML(m){
+
+                    let g1 = m["Team1 Goals"]?.trim();
+                    let g2 = m["Team2 Goals"]?.trim();
+
+                    let has =
+                        g1 !== "" &&
+                        g2 !== "" &&
+                        !isNaN(parseInt(g1)) &&
+                        !isNaN(parseInt(g2));
+
+                    if (has) {
+
+                        return `
+                            ${m.Team1}
+                            <b>${g1}-${g2}</b>
+                            ${m.Team2}
+                        `;
+                    }
+
+                    return `
+                        ${m.Team1}
+                        vs
+                        ${m.Team2}
+                    `;
+                }
+
+                // ===========================
+                // SMART SLOT ASSIGNMENT
+                // ===========================
+
+                let slots = [];
+
+                function findSlot(needsA, needsB){
+
+                    for(let i = 0; i < slots.length; i++){
+
+                        let s = slots[i];
+
+                        let aFree = !needsA || !s.A;
+                        let bFree = !needsB || !s.B;
+
+                        if(aFree && bFree){
+                            return i;
+                        }
+                    }
+
+                    slots.push({
+                        A:false,
+                        B:false
+                    });
+
+                    return slots.length - 1;
+                }
+
+                // ===========================
+                // RENDER KNOCKOUTS
+                // ===========================
+
+                Object.values(groups).forEach(group => {
+
+                    let needsA = group.A.length > 0;
+                    let needsB = group.B.length > 0;
+
+                    let slotIndex = findSlot(needsA, needsB);
+
+                    if(needsA){
+                        slots[slotIndex].A = true;
+                    }
+
+                    if(needsB){
+                        slots[slotIndex].B = true;
+                    }
+
+                    let time = kstart + 45 + slotIndex * slot;
+
+                    let lift = "";
+                    let clock = "";
+
+                    group.A.forEach(m => {
+
+                        lift += `
+                            <div class="match groupA">
+                                ${matchHTML(m)}
+                            </div>
+                        `;
+                    });
+
+                    group.B.forEach(m => {
+
+                        clock += `
+                            <div class="match groupB">
+                                ${matchHTML(m)}
+                            </div>
+                        `;
+                    });
+
+                    let liftHeader =
+                        lift
+                        ? `<strong>${group.title}</strong><br><br>`
+                        : "";
+
+                    let clockHeader =
+                        clock
+                        ? `<strong>${group.title}</strong><br><br>`
+                        : "";
+
+                    koBody.innerHTML += `
+                        <tr>
+
+                            <td class="time">
+                                ${formatTime(time)}
+                            </td>
+
+                            <td>
+                                ${liftHeader}
+                                ${lift}
+                            </td>
+
+                            <td>
+                                ${clockHeader}
+                                ${clock}
+                            </td>
+
+                        </tr>
+                    `;
+                });
+
+            }
+
+        });
+
+    }
+
+});
+
+</script>
+
+</body>
+</html>
+
