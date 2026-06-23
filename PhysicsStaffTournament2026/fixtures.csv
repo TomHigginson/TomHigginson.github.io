@@ -1,13 +1,13 @@
 Side,Home Team,Home Goals,Away Goals,Away Team
 A,IAC AA,,,Back of the QET
-B,Cardiac Arrest,,,1/sqrt(2) (|a> + |b>)
+B,Cardiac Arrest,3,0,1/sqrt(2) (|a> + |b>)
 A,Quantum & Soft Matter,,,IAC A
 B,Shooting Stars,,,Theory FC
 A,IAC AA,,,IAC A
 B,Cardiac Arrest,,,Theory FC
 A,Back of the QET,,,Quantum & Soft Matter
-B,1/sqrt(2) (|a> + |b>),,,Shooting Stars
+B,1/sqrt(2) (|a> + |b>),0,3,Shooting Stars
 A,IAC AA,,,Quantum & Soft Matter
 B,Cardiac Arrest,,,Shooting Stars
 A,IAC A,,,Back of the QET
-B,Theory FC,,,1/sqrt(2) (|a> + |b>)
+B,Theory FC,3,0,1/sqrt(2) (|a> + |b>)
