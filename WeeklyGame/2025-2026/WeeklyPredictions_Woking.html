@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Weekly Premier League Predictions 2026-27</title>
+    <title>Weekly Premier League Predictions</title>
     <style>
         body { font-family: Arial, sans-serif; margin: 20px; }
         nav { margin-bottom: 20px; }
@@ -48,7 +48,7 @@
         <div id="leaderboard"></div>
     </section>
 
-    <script src="../TeamData.js"></script>
+    <script src="../../TeamData.js"></script>
     <script>
         function showTab(id) {
             document.querySelectorAll("section").forEach(sec => sec.classList.remove("active"));
@@ -94,9 +94,10 @@
             }
         }
 
+
         async function init() {
             const fixtures = await loadCSV("fixtures.csv");
-            const predictions = await loadCSV("weekly_predictions_Bristol.csv");
+            const predictions = await loadCSV("weekly_predictions_Woking.csv");
 
             // Calculate Outcome for each prediction
             for (let p of predictions) {
@@ -178,9 +179,10 @@
                 }).join("<br>");
             }
 
+
                     upcomingHTML += `<tr>
                         ${teamCell(g.Home, "Home")}
-                        <td>${g.HomeScore || ""} - ${g.AwayScore || ""}</td>
+                        <td>vs</td>
                         ${teamCell(g.Away, "Away")}
                         <td>${predText}</td>
                     </tr>`;

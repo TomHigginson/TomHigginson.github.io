@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Weekly Premier League Predictions 2026-27</title>
+    <title>Weekly Premier League Predictions</title>
     <style>
         body { font-family: Arial, sans-serif; margin: 20px; }
         nav { margin-bottom: 20px; }
@@ -48,7 +48,7 @@
         <div id="leaderboard"></div>
     </section>
 
-    <script src="../TeamData.js"></script>
+    <script src="../../TeamData.js"></script>
     <script>
         function showTab(id) {
             document.querySelectorAll("section").forEach(sec => sec.classList.remove("active"));
@@ -219,8 +219,8 @@
                     nextAllowed = allCorrect ? weekPreds.length + 1 : 1;
                     nextAllowed = Math.min(nextAllowed, 10);
 
-                    const tickImg = '<img src="Tick.jpeg" alt="correct" width="16" height="16">';
-                    const crossImg = '<img src="cross.png" alt="wrong" width="16" height="16">';
+                    const tickImg = '<img src="../Tick.jpeg" alt="correct" width="16" height="16">';
+                    const crossImg = '<img src="../cross.png" alt="wrong" width="16" height="16">';
                     const icons = tickImg.repeat(correctCount) + crossImg.repeat(wrongCount);
 
                     indivHTML += `<tr>
