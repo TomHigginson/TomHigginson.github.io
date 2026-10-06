@@ -1,9 +1,9 @@
 Side,Competition,Stage,Team1,Team2
-A,Europa League,Semi Final,Group A Position 3,Group B Position 4
-B,Europa League,Semi Final,Group B Position 3,Group A Position 4
-A,Champions League,Semi Final,Group A Position 1,Group B Position 2
-B,Champions League,Semi Final,Group B Position 1,Group A Position 2
-A,Europa League,3rd Place,TBD,TBD
-B,Champions League,3rd Place,TBD,TBD
-A,Europa League,Final,TBD,TBD
-B,Champions League,Final,TBD,TBD
+A,Europa League,Round Robin,IAC A,IAC AA,2,5
+B,Europa League,Round Robin,Shooting Stars,IAC AA,4,3
+A,Champions League,Semi Final,Back of the QET,Theory FC,2,3
+B,Champions League,Semi Final,Cardiac Arrest,Quantum & Soft Matter
+A,Europa League,Round Robin - Final,IAC A,Shooting Stars,0,4
+B,Champions League,Final,Theory FC,Cardiac Arrest,2,2,Cardiac Arrest win on penalties,  
+
+
